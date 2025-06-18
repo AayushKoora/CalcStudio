@@ -77,7 +77,7 @@ class RiemannSumTab(QWidget):
         """)
         self.remFuncInput.setSizePolicy(QSizePolicy.Minimum, QSizePolicy.Fixed)
 
-        self.remSubmit = QPushButton()
+        self.remSubmit = QPushButton("Submit")
         self.remSubmit.clicked.connect(self.riemannSummation)
         self.remBox1Layout.addWidget(self.remSubmit)
         self.remSubmit.setStyleSheet("""
@@ -209,7 +209,7 @@ class RiemannSumTab(QWidget):
         self.remLastVal.setSizePolicy(QSizePolicy.Minimum, QSizePolicy.Fixed)
 
         self.remBox6 = QWidget()
-        self.remBox6Layout = QHBoxLayout(self.remBox6)
+        self.remBox6Layout = QVBoxLayout(self.remBox6)
         self.remCont1Layout.addWidget(self.remBox6)
 
         self.remApproxAreaLabel = QLabel("Approx. Area")
@@ -246,45 +246,100 @@ class RiemannSumTab(QWidget):
     def riemannSummation(self):
         x, i = symbols("x i")
 
-        func = sympify(self.remFuncInput.text())
-        numRect = int(self.remNumRect.text())
-        type = self.remTypeApprox.text()
+        # Step 1: Parse Inputs
+        try:
+            func = sympify(self.remFuncInput.text())
+            numRect = int(self.remNumRect.text())
+            type = self.remTypeApprox.text()
+            firstVal = float(self.remFirstVal.text())
+            lastVal = float(self.remLastVal.text())
+            delta = (lastVal - firstVal) / numRect
+        except Exception as e:
+            print(f"Input Error: {e}")
+            self.remApproxAreaLabel.setText("Invalid Input.")
+            self.remPercErrorLabel.setText("Null")
+            return
 
-        firstVal = float(self.remFirstVal.text())
-        lastVal = float(self.remLastVal.text())
-        delta = (lastVal - firstVal) / numRect
-
+        # Step 2: x Range Calculation
         self.axRem.clear()
-        x_points = np.linspace(firstVal - 1, lastVal + 1, 300)
-        func_np = lambdify(x, func, 'numpy')
-        y_func_np = func_np(x_points)
 
-        self.axRem.plot(x_points, y_func_np, label='Function')
+        try:
+            center = (lastVal - firstVal) / 2
+            range_width = 1.5*abs(lastVal - firstVal)
+            x_min = center - range_width
+            x_max = center + range_width
+            x_points = np.linspace(firstVal - 1, lastVal + 1, 200)
+        except Exception as e:
+            print(f"x Range Calculation Error: {e}")
+            self.remApproxAreaLabel.setText("Error Calculating x Range.")
+            self.remPercErrorLabel.setText("Null")
+            return
 
-        if type == 'left':
-            approx_sum = summation(func.subs(x, firstVal + i*delta) * delta, (i, 0, numRect-1))
-            x_left = np.linspace(firstVal, lastVal - delta, numRect)
-            y_left = func_np(x_left)
+        # Step 3: y Range Calculation
+        try:
+            func_np = lambdify(x, func, 'numpy')
+            y_func_np = func_np(x_points)
 
-            self.axRem.bar(x_left, y_left, width=delta, align='edge', label='left sum', alpha=0.5, color = 'blue')
+            x_values = np.linspace(firstVal, lastVal, 200)
+            y_values = func_np(x_values)
 
-        elif type == 'right':
-            approx_sum = summation(func.subs(x, firstVal + i*delta) * delta, (i, 1, numRect))
-            x_right = np.linspace(firstVal + delta, lastVal, numRect)
-            y_right = func_np(x_right)
+            finite_y = y_values[np.isfinite(y_values)]
 
-            self.axRem.bar(x_right - delta, y_right, width=delta, align = 'edge', label='right sum',  alpha=0.5, color = 'blue')
+            if finite_y.size == 0:
+                y_min, y_max = -1, 1
+            else:
+                y_min = np.min(finite_y)
+                y_max = np.max(finite_y)
 
-        area = integrate(func, (x, firstVal, lastVal))
+            if y_max == y_min:
+                y_min -= 1
+                y_max += 1
+            else:
+                y_margin = 0.1 * (y_max - y_min)
+                y_min -= y_margin
+                y_max += y_margin
+        except Exception as e:
+            print(f"y Range Calculation Error: {e}")
+            self.remApproxAreaLabel.setText("Error Evaluation Function or y Range.")
+            self.remPercErrorLabel.setText("Null")
+            return
 
-        perc_error = ((approx_sum - area) / area) * 100
+        # Step 4: Plotting
+        try:
+            self.axRem.set_xlim([x_min, x_max])
+            self.axRem.set_ylim([y_min, y_max])
+            self.axRem.plot(x_points, y_func_np, label='Function')
+            self.axRem.axhline(0, color='black', linestyle=':')
+            self.axRem.axvline(0, color='black', linestyle=':')
 
-        self.remApproxAreaLabel.setText(f"Approx Area: {approx_sum}")
-        self.remPercErrorLabel.setText(f"Percent Error: {perc_error}%")
+            if type == 'left':
+                approx_sum = summation(func.subs(x, firstVal + i*delta) * delta, (i, 0, numRect-1))
+                x_left = np.linspace(firstVal, lastVal - delta, numRect)
+                y_left = func_np(x_left)
 
-        self.axRem.legend()
-        self.remCanvas.draw()
-        
+                self.axRem.bar(x_left, y_left, width=delta, align='edge', label='left sum', alpha=0.5, color = 'blue')
+
+            elif type == 'right':
+                approx_sum = summation(func.subs(x, firstVal + i*delta) * delta, (i, 1, numRect))
+                x_right = np.linspace(firstVal + delta, lastVal, numRect)
+                y_right = func_np(x_right)
+
+                self.axRem.bar(x_right - delta, y_right, width=delta, align = 'edge', label='right sum',  alpha=0.5, color = 'blue')
+
+            area = integrate(func, (x, firstVal, lastVal))
+
+            perc_error = ((approx_sum - area) / area) * 100
+
+            self.remApproxAreaLabel.setText(f"Approx Area: {approx_sum}")
+            self.remPercErrorLabel.setText(f"Percent Error: {perc_error}%")
+
+            self.axRem.legend()
+            self.remCanvas.draw()
+        except Exception as e:
+            print(f"Plotting Error: {e}")
+            self.remApproxAreaLabel.setText("Error Plotting Function.")
+            self.remPercErrorLabel.setText("Null")
+            return
 
     def remInsert_ax(self):
         self.axRem = self.remCanvas.figure.subplots()

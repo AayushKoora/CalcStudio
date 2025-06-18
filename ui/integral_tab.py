@@ -2,7 +2,6 @@ from PyQt5.QtWidgets import QWidget, QVBoxLayout, QHBoxLayout, QLabel, QPushButt
 from  PyQt5.QtCore import Qt
 from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg as FigureCanvas
 import matplotlib.pyplot as plt
-import matplotlib
 import numpy as np
 from sympy import *
 from style.colors import Colors
@@ -163,36 +162,89 @@ class IntegralTab(QWidget):
         self.intCont2Layout.addWidget(self.intCanvas)
         self.intInsert_ax()
 
+    # Function that integrates and plots it on the graph
     def integration(self):
         x = symbols("x")
 
-        intfirst = float(self.intfirstValue.text())
-        intsecond = float(self.intsecondValue.text())
-        intfunc = sympify(self.intFunction.text())
-
-        intValue = integrate(intfunc, (x, intfirst, intsecond))
+        # Step 1: Parse Inputs
+        try: 
+            intfirst = float(self.intfirstValue.text())
+            intsecond = float(self.intsecondValue.text())
+            intfunc = sympify(self.intFunction.text())
+        except Exception as e:
+            print(f"Input Error: {e}")
+            self.intLabel.setText("Invalid input.")
+            return
+        
+        # Step 2: Integration
+        try:
+            intValue = integrate(intfunc, (x, intfirst, intsecond))
+        except Exception as e:
+            print(f"Integration Error: {e}")
+            self.intLabel.setText("Error Calculating Integral.")
+            return
+        
         self.intLabel.setText(f"Area Under the Curve: {intValue}")
 
-        self.axInt.clear()
-        self.axInt.set_ylim([0, 100])
-        self.axInt.set_xlim([0, 100])
+        # Step 3: x Range Calculation
+        self.axInt.figure.clf()
+        self.axInt = self.intCanvas.figure.subplots()
 
-        x_points = np.linspace(-100, 100, 200)
-        intfunc_np = lambdify(x, intfunc, 'numpy')
-        y_intfunc_np = intfunc_np(x_points)
+        try:
+            center = (intfirst + intsecond) / 2
+            range_width = 1.5*abs(intsecond - intfirst)
+            x_min = center - range_width
+            x_max = center + range_width
+            x_points = np.linspace(x_min, x_max, 200)
+        except Exception as e:
+            print(f"x Range Error: {e}")
+            self.intLabel.setText(f"Error Calculating x Range.")
+            return
 
-        self.axInt.plot(x_points, y_intfunc_np, label="Function")
+        # Step 4: Numeric Evaluation and y Range Calculation
+        try:
+            intfunc_np = lambdify(x, intfunc, 'numpy')
+            y_intfunc_np = intfunc_np(x_points)
 
-        x_fill = np.linspace(intfirst, intsecond, 200)
-        y_fill = intfunc_np(x_fill)
+            x_fill = np.linspace(intfirst, intsecond, 200)
+            y_fill = intfunc_np(x_fill)
 
-        self.axInt.fill_between(x_fill, y_fill, color='blue', label='Area under curve')
+            finite_y = y_fill[np.isfinite(y_fill)]
 
-        self.axInt.legend()
-        self.intCanvas.draw()
+            if finite_y.size == 0:
+                y_min, y_max = -1, 1
+            else:
+                y_min = np.min(finite_y)
+                y_max = np.max(finite_y)
+
+            if y_max == y_min:
+                y_min -= 1
+                y_max += 1
+            else:
+                y_margin = 0.1 * (y_max - y_min)
+                y_min -= y_margin
+                y_max += y_margin
+            
+        except Exception as e:
+            print(f"Evaluation Error: {e}")
+            self.intLabel.setText("Error Evaluating Function or y Range.")
+            return
+        
+        # Step 5: Plotting
+        try:
+            self.axInt.set_xlim([x_min, x_max])
+            self.axInt.set_ylim([y_min - y_margin, y_max + y_margin])
+            self.axInt.plot(x_points, y_intfunc_np, label="Function")
+            self.axInt.axhline(0, color='black', linestyle=':')
+            self.axInt.axvline(0, color='black', linestyle=':')
+            self.axInt.fill_between(x_fill, y_fill, color='blue', alpha = 0.4, label='Area under curve')
+
+            self.axInt.legend()
+            self.intCanvas.draw()
+        except Exception as e:
+            print(f"Plotting Error: {e}")
+            self.intLabel.setText("Error Plotting Function.")
 
     def intInsert_ax(self):
         self.axInt = self.intCanvas.figure.subplots()
-        self.axInt.set_ylim([-100, 100])
-        self.axInt.set_xlim([-100, 100])
         self.bar = None

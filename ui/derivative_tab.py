@@ -1,9 +1,7 @@
-import sys
-from PyQt5.QtWidgets import QWidget, QHBoxLayout, QVBoxLayout, QLineEdit, QSlider, QLabel, QSizePolicy
+from PyQt5.QtWidgets import QWidget, QHBoxLayout, QVBoxLayout, QLineEdit, QSlider, QLabel, QSizePolicy, QPushButton, QMessageBox
 from PyQt5.QtCore import Qt
 from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg as FigureCanvas
 import matplotlib.pyplot as plt
-import matplotlib
 import numpy as np
 from sympy import symbols, sympify, diff, lambdify
 from style.colors import Colors
@@ -16,7 +14,7 @@ class DerivativeTab(QWidget):
         self.init_ui()
 
     def init_ui(self):
-        
+
         # === Derivative Tab ===
         self.derivLayout = QHBoxLayout(self)
         self.setLayout(self.derivLayout)
@@ -60,9 +58,12 @@ class DerivativeTab(QWidget):
         """)
         self.derivFunc.setSizePolicy(QSizePolicy.Minimum, QSizePolicy.Fixed)
 
+        self.derivValueCont = QWidget()
+        self.derivValueContLayout = QHBoxLayout(self.derivValueCont)
+        self.derivCont1Layout.addWidget(self.derivValueCont)
+
         self.input = QLineEdit()
-        self.input.returnPressed.connect(self.setfunction)
-        self.derivCont1Layout.addWidget(self.input)
+        self.derivValueContLayout.addWidget(self.input, stretch=4)
         self.input.setStyleSheet("""
             QLineEdit {
                 background-color: #ffffff;
@@ -77,6 +78,21 @@ class DerivativeTab(QWidget):
         """)
         self.input.setSizePolicy(QSizePolicy.Minimum, QSizePolicy.Fixed)
 
+        self.derivSubmit = QPushButton("Submit Function")
+        self.derivSubmit.clicked.connect(self.setfunction)
+        self.derivValueContLayout.addWidget(self.derivSubmit, stretch=1)
+        self.derivSubmit.setStyleSheet("""
+            QPushButton {
+                background-color: #999999;
+                padding: 16px, 16px;
+                font-size: 16px;
+            }
+                                   
+            QPushButton:pressed {
+                background-color: #88cc88;
+            }
+        """)
+
         self.derivXValue = QLabel("X Value:")
         self.derivCont1Layout.addWidget(self.derivXValue)
         self.derivXValue.setStyleSheet("""
@@ -87,7 +103,7 @@ class DerivativeTab(QWidget):
         self.derivXValue.setSizePolicy(QSizePolicy.Minimum, QSizePolicy.Fixed)
 
         self.slider = QSlider(Qt.Horizontal)
-        self.slider.setMinimum(1)
+        self.slider.setMinimum(-100)
         self.slider.setMaximum(100)
         self.slider.setValue(1)
         self.slider.valueChanged.connect(self.derivative)
@@ -154,40 +170,87 @@ class DerivativeTab(QWidget):
             self.func_str = "x"
         print(f"Stored input: {self.func_str}")
 
+    # Function that differentiates input function and plots it on the graph
     def derivative(self, value):
         if not hasattr(self, 'func_str'):
             return
 
         x = symbols("x")
-        func = sympify(self.func_str)
-        deriv = diff(func, x)
-        slope = deriv.subs(x, value)
-        y_val = func.subs(x, value)
+
+        # Step 1: Parse Inputs; Differentiation
+        try:
+            func = sympify(self.func_str)
+            deriv = diff(func, x)
+            slope = deriv.subs(x, value)
+            y_val = func.subs(x, value)
+        except Exception as e:
+            print(f"Input Error: {e}")
+            self.label.setText("Invalid input; Error Calculating Derivative.")
+            return
 
         tangent_line = slope * x - slope * value + y_val
-
-        print(f"Tangent Line: {tangent_line}")
         self.label.setText(f"Derivative at x = {value}: {slope}")
 
-        self.ax.clear()
-        self.ax.set_ylim([-100, 100])
-        self.ax.set_xlim([-100, 100])
+        # Step 2: x Range Calculation
+        try:
+            range_width = 100
+            x_min = value - range_width
+            x_max = value + range_width
+            x_points = np.linspace(x_min, x_max, 400)
 
-        x_points = np.linspace(-100, 100, 200)
-        func_np = lambdify(x, func, 'numpy')
-        tangent_np = lambdify(x, tangent_line, 'numpy')
+            func_np = lambdify(x, func, 'numpy')
+            tangent_np = lambdify(x, tangent_line, 'numpy')
+        except Exception as e:
+            print(f"x Range Calculation Error: {e}")
+            self.label.setText("x Range Calculation Error.")
+            return
 
-        y_func_np = func_np(x_points)
-        y_tangent_np = tangent_np(x_points)
+        # Step 3: y Range Calculation
+        try:
+            y_func_np = func_np(x_points)
+            y_tangent_np = tangent_np(x_points)
 
-        self.ax.plot(x_points, y_tangent_np, label="Tangent Line")
-        self.ax.plot(x_points, y_func_np, label="Function")
+            if np.ndim(y_func_np) == 0:
+                y_func_np = np.full_like(x_points, y_func_np)
 
-        self.ax.legend()
-        self.canvas.draw()
+            if np.ndim(y_tangent_np) == 0:
+               y_tangent_np = np.full_like(x_points, y_tangent_np)
+
+            y_all = np.concatenate([y_func_np, y_tangent_np])
+            finite_y = y_all[np.isfinite(y_all)]
+
+            if finite_y.size == 0:
+                self.show_error("Function has no finite values in this range")
+                return
+
+            y_min = np.min(finite_y)
+            y_max = np.max(finite_y)
+
+            y_margin = 0.1 * (y_max - y_min) if y_max != y_min else 1
+
+        except Exception as e:
+            print(f"y Range Calculation Error: {e}")
+            self.label.setText("y Range Calculation Error.")
+            return
+
+        # Step 4: Plotting
+        try:
+            self.ax.clear()
+            self.ax.set_xlim([x_min, x_max])
+            self.ax.set_ylim([y_min - y_margin, y_max + y_margin])
+
+            self.ax.plot(x_points, y_tangent_np, label="Tangent Line")
+            self.ax.plot(x_points, y_func_np, label="Function")
+            self.ax.axhline(0, color='black', linestyle=':')
+            self.ax.axvline(0, color='black', linestyle=':')
+
+            self.ax.legend()
+            self.canvas.draw()
+        except Exception as e:
+            print(f" Plotting Error: {e}")
+            self.label.setText("Error Plotting Function")
+            return
 
     def insert_ax(self):
         self.ax = self.canvas.figure.subplots()
-        self.ax.set_ylim([-100, 100])
-        self.ax.set_xlim([-100, 100])
         self.bar = None
