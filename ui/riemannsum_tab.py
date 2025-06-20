@@ -39,7 +39,7 @@ class RiemannSumTab(QWidget):
         self.remTitle.setAlignment(Qt.AlignLeft | Qt. AlignVCenter)
         self.remTitle.setSizePolicy(QSizePolicy.Minimum, QSizePolicy.Fixed)
 
-        self.remSubTitle = QLabel("Riemann Sum")
+        self.remSubTitle = QLabel("Integrals: Riemann Sum")
         self.remCont1Layout.addWidget(self.remSubTitle)
         self.remSubTitle.setStyleSheet("""
             font-family: 'Arial';
@@ -343,6 +343,4 @@ class RiemannSumTab(QWidget):
 
     def remInsert_ax(self):
         self.axRem = self.remCanvas.figure.subplots()
-        self.axRem.set_ylim([-100, 100])
-        self.axRem.set_xlim([-100, 100])
         self.bar = None

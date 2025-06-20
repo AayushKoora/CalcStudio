@@ -1,20 +1,19 @@
-from PyQt5.QtWidgets import (QMainWindow, QWidget, QVBoxLayout, QHBoxLayout, QTabWidget)
+from PyQt5.QtWidgets import (QMainWindow, QWidget, QVBoxLayout, QHBoxLayout, QTabWidget, QSizePolicy)
 from PyQt5.QtCore import Qt
 from style.colors import Colors
 from ui.home_tab import HomeTab
 from ui.derivative_tab import DerivativeTab
 from ui.integral_tab import IntegralTab
 from ui.riemannsum_tab import RiemannSumTab
+from ui.gradient_descent_tab import GradientDescentTab
 
 class MainWindow(QMainWindow):
     def __init__(self):
         super().__init__()
 
         self.setWindowTitle("CalcStudio")
-        self.setMinimumHeight(400)
-        self.setMinimumWidth(711)
-        self.setMaximumHeight(900)
-        self.setMaximumWidth(1600)
+        self.setMinimumHeight(800)
+        self.setMinimumWidth(1422)
         self.showFullScreen()
         self.setStyleSheet(f"background-color: {Colors.LIGHTGRAY};")
 
@@ -33,6 +32,7 @@ class MainWindow(QMainWindow):
         topContainer = QWidget()
         topContainer.setStyleSheet(f"background-color: {Colors.DARKGRAY};")
         mainLayout.addWidget(topContainer, stretch=1)
+        topContainer.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Expanding)
 
         # --- Main Content Area ---
         contentContainer = QTabWidget()
@@ -41,6 +41,7 @@ class MainWindow(QMainWindow):
         contentContainer.addTab(DerivativeTab(self), "Derivative")
         contentContainer.addTab(IntegralTab(self), "Integral")
         contentContainer.addTab(RiemannSumTab(self), "Riemann Sum")
+        contentContainer.addTab(GradientDescentTab(self), "Gradient Descent")
         contentContainer.setTabPosition(QTabWidget.West)
         contentContainer.setStyleSheet("""
             QTabWidget::pane {
@@ -61,8 +62,10 @@ class MainWindow(QMainWindow):
                 color: black;
             }                  
         """)
+        contentContainer.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Expanding)
 
         # --- Bottom Bar ---
         bottomContainer = QWidget()
         bottomContainer.setStyleSheet(f"background-color: {Colors.DARKGRAY};")
         mainLayout.addWidget(bottomContainer, stretch=1)
+        bottomContainer.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Expanding)

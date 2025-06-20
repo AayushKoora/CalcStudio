@@ -157,12 +157,10 @@ class DerivativeTab(QWidget):
         self.derivCont2Layout.addWidget(self.canvas)
         self.insert_ax()
 
-        self.derivCont2.setStyleSheet("""
-
-        border: 2px solid black;
-        border-radius: 5px;        
-
-        """)
+        # self.derivCont2.setStyleSheet("""
+        # border: 2px solid black;
+        # border-radius: 5px;        
+        # """)
         
     def setfunction(self):
         self.func_str = self.input.text().strip()
