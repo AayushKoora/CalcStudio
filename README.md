@@ -1,3 +1,7 @@
+![License](https://img.shields.io/github/license/AayushKoora/CalcStudio)
+![Python Version](https://img.shields.io/badge/python-3.10-blue)
+![GitHub stars](https://img.shields.io/github/stars/AayushKoora/CalcStudio?style=social)
+
 CalcStudio
 Interactive calculus visualizer for students and educators
 
