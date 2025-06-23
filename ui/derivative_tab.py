@@ -278,7 +278,7 @@ class DerivativeTab(QWidget):
             return
 
         tangent_line = slope * x - slope * value + y_val
-        self.derLabel.setText(f"Derivative at x = {value}: {slope}")
+        self.derLabel.setText(f"Derivative at x = {value}: {slope:.4f}")
         self.derivTangLine.setText(f"Tangent Line: {tangent_line}")
 
         # Step 2: x Range Calculation

@@ -286,7 +286,7 @@ class IntegralTab(QWidget):
             self.intLabel.setText("Error Calculating Integral.")
             return
         
-        self.intLabel.setText(f"Area Under the Curve: {intValue}")
+        self.intLabel.setText(f"Area Under the Curve: {intValue:.4f}")
 
         # Step 3: x Range Calculation
         self.axInt.figure.clf()

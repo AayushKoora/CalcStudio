@@ -1,6 +1,7 @@
-from PyQt5.QtWidgets import (QWidget, QVBoxLayout, QHBoxLayout, QLabel, QPushButton, QLineEdit, QSizePolicy)
+from PyQt5.QtWidgets import (QWidget, QVBoxLayout, QHBoxLayout, QLabel, QPushButton, QSizePolicy)
 from  PyQt5.QtCore import Qt
 from style.colors import Colors
+import webbrowser
 
 class HomeTab(QWidget):
     def __init__(self, main_window):
@@ -68,6 +69,7 @@ class HomeTab(QWidget):
 
         self.button1 = QPushButton("Github")
         self.buttonContLayout.addWidget(self.button1, stretch=10)
+        self.button1.clicked.connect(self.github)
         self.button1.setStyleSheet("""
             QPushButton {
                 background-color: #FF6A6A;
@@ -78,6 +80,7 @@ class HomeTab(QWidget):
 
         self.button2 = QPushButton("Tutorial")
         self.buttonContLayout.addWidget(self.button2, stretch=10)
+        self.button2.clicked.connect(self.tutorial)
         self.button2.setStyleSheet("""
             QPushButton {
                 background-color: #FF6A6A;
@@ -109,3 +112,9 @@ class HomeTab(QWidget):
         # border: 2px solid black;
         # border-radius: 5px;        
         # """)
+
+    def github(self):
+        webbrowser.open("https://github.com/AayushKoora/CalcStudio")
+
+    def tutorial(self):
+        pass

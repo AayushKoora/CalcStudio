@@ -415,8 +415,8 @@ class RiemannSumTab(QWidget):
 
             perc_error = ((approx_sum - area) / area) * 100
 
-            self.remApproxAreaLabel.setText(f"Approx Area: {approx_sum}")
-            self.remPercErrorLabel.setText(f"Percent Error: {perc_error}%")
+            self.remApproxAreaLabel.setText(f"Approx Area: {approx_sum: .4f}")
+            self.remPercErrorLabel.setText(f"Percent Error: {perc_error: .4f}%")
 
             self.axRem.legend()
             self.remCanvas.draw()

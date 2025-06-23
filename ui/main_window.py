@@ -78,7 +78,7 @@ class MainWindow(QMainWindow):
 
             QTabBar::tab:selected {
                 background: "#FF6A6A";
-                color: black;
+                color: white;
             }                  
         """)
         contentContainer.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Expanding)
