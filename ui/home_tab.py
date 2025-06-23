@@ -6,7 +6,7 @@ class HomeTab(QWidget):
     def __init__(self, main_window):
         super().__init__()
         self.main_window = main_window
-        self.setStyleSheet(f"background-color: {Colors.LIGHTGRAY};")
+        self.setStyleSheet(f"background-color: {Colors.PRIMARY};")
         self.init_ui()
 
     def init_ui(self):
@@ -14,6 +14,8 @@ class HomeTab(QWidget):
         # === Home Tab ===
         self.homeLayout = QHBoxLayout(self)
         self.setLayout(self.homeLayout)
+        self.homeLayout.setContentsMargins(0, 0, 0, 0)
+        self.homeLayout.setSpacing(0)
 
         # --- Space One ---
         self.homeSpace1 = QWidget()
@@ -33,43 +35,44 @@ class HomeTab(QWidget):
         # border-radius: 5px;        
         # """)
 
+        self.space = QWidget()
+        self.homeCont1Layout.addWidget(self.space, stretch=41)
+
         self.title = QLabel("CALCSTUDIO")
         self.homeCont1Layout.addWidget(self.title)
         self.title.setStyleSheet("""
-            font-family: 'Arial';
+            font-family: 'Helvetica';
             font-size: 80px;
             color: #595959;
+            font-weight: bold;
         """)
-        self.title.setAlignment(Qt.AlignLeft | Qt.AlignVCenter)
         self.title.setSizePolicy(QSizePolicy.Minimum, QSizePolicy.Fixed)
+        self.title.setAlignment(Qt.AlignHCenter | Qt.AlignVCenter)
 
         self.description = QLabel("Calculus Visualization Tool")
-        self.homeCont1Layout.addWidget(self.description)
+        self.homeCont1Layout.addWidget(self.description, stretch=37)
         self.description.setStyleSheet("""
-            font-family: 'Arial';
-            font-size: 50px;
+            font-family: 'Helvetica';
+            font-size: 30px;
             color: #595959;
         """)
         self.description.setSizePolicy(QSizePolicy.Minimum, QSizePolicy.Fixed)
+        self.description.setAlignment(Qt.AlignHCenter | Qt.AlignVCenter)
 
         self.empty1 = QWidget()
-        self.homeCont1Layout.addWidget(self.empty1, stretch=3)
+        self.homeCont1Layout.addWidget(self.empty1, stretch=301)
 
         self.buttonCont = QWidget()
         self.buttonContLayout = QHBoxLayout(self.buttonCont)
-        self.homeCont1Layout.addWidget(self.buttonCont, stretch=2)
+        self.homeCont1Layout.addWidget(self.buttonCont, stretch=41)
 
         self.button1 = QPushButton("Github")
         self.buttonContLayout.addWidget(self.button1, stretch=10)
         self.button1.setStyleSheet("""
             QPushButton {
-                background-color: #999999;
+                background-color: #FF6A6A;
                 padding: 16px, 16px;
                 font-size: 16px;
-            }
-                                   
-            QPushButton:pressed {
-                background-color: #88cc88;
             }
         """)
 
@@ -77,18 +80,17 @@ class HomeTab(QWidget):
         self.buttonContLayout.addWidget(self.button2, stretch=10)
         self.button2.setStyleSheet("""
             QPushButton {
-                background-color: #999999;
+                background-color: #FF6A6A;
                 padding: 16px, 16px;
                 font-size: 16px;
-            }
-                                   
-            QPushButton:pressed {
-                background-color: #88cc88;
             }
         """)
 
         self.buttonSpace = QWidget()
         self.buttonContLayout.addWidget(self.buttonSpace, stretch=30)
+
+        self.space4 = QWidget()
+        self.homeCont1Layout.addWidget(self.space4, stretch=119)
 
         # --- Space Two ---
         self.homeSpace2 = QWidget()
@@ -107,30 +109,3 @@ class HomeTab(QWidget):
         # border: 2px solid black;
         # border-radius: 5px;        
         # """)
-
-        self.homeContSpace = QWidget()
-        self.homeCont2Layout.addWidget(self.homeContSpace, stretch=8)
-
-        self.tutorial_label = QLabel("CalcStudio Tutorial")
-        self.homeCont2Layout.addWidget(self.tutorial_label)
-        self.tutorial_label.setStyleSheet("""
-            font-family: 'Arial';
-            font-size: 40px;
-            color: #595959;
-            border: 1px solid black;
-            border-radius: 2px;
-            background-color: #999999;
-        """)
-        self.tutorial_label.setAlignment(Qt.AlignLeft | Qt.AlignVCenter)
-        self.tutorial_label.setSizePolicy(QSizePolicy.Minimum, QSizePolicy.Fixed)
-
-        self.tutorial = QLabel("Coming Soon")
-        self.homeCont2Layout.addWidget(self.tutorial, stretch=70)
-        self.tutorial.setStyleSheet("""
-            font-family: 'Arial';
-            font-size: 20px;
-            color: #595959;
-            border: 1px solid black;
-            border-radius: 2px;
-            background-color: #ffffff;
-        """)

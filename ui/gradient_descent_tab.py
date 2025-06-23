@@ -18,142 +18,232 @@ class GradientDescentTab(QWidget):
 
     def init_ui(self):
 
-        # === Gradient Descent ===
+        # === Gradient Descent === # Start
         self.grdLayout = QHBoxLayout(self)
         self.setLayout(self.grdLayout)
+        self.grdLayout.setContentsMargins(0, 0, 0, 0)
+        self.grdLayout.setSpacing(0)
 
-        # --- Container One ---
+        # --- Container One --- # Start
         self.grdCont1 = QWidget()
         self.grdCont1Layout = QVBoxLayout(self.grdCont1)
-        self.grdLayout.addWidget(self.grdCont1, stretch=4)
+        self.grdLayout.addWidget(self.grdCont1, stretch=55)
+        self.grdCont1Layout.setContentsMargins(0, 0, 0, 0)
+        self.grdCont1Layout.setSpacing(0)
         # self.grdCont1.setStyleSheet("""
         # border: 2px solid black;
         # border-radius: 5px;
         # """)
 
+        self.grdCont1Space0 = QWidget()
+        self.grdCont1Layout.addWidget(self.grdCont1Space0, stretch=41)
+
+        ## --- Heading Container --- ## Start
+        self.grdCont1Head = QWidget()
+        self.grdCont1HeadLayout = QHBoxLayout(self.grdCont1Head)
+        self.grdCont1Layout.addWidget(self.grdCont1Head, stretch=96)
+        self.grdCont1HeadLayout.setContentsMargins(0, 0, 0, 0)
+        self.grdCont1HeadLayout.setSpacing(0)
+
+        self.grdCont1Space1 = QWidget()
+        self.grdCont1HeadLayout.addWidget(self.grdCont1Space1, stretch=2)
+        self.grdCont1Space1.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Preferred)
+
+        ### --- Content in Heading Container --- ### Start
+        self.grdCont1Head1 = QWidget()
+        self.grdCont1Head1Layout = QVBoxLayout(self.grdCont1Head1)
+        self.grdCont1HeadLayout.addWidget(self.grdCont1Head1, stretch=2)
+        self.grdCont1Head1Layout.setContentsMargins(0, 0, 0, 0)
+        self.grdCont1Head1Layout.setSpacing(0)
+
         self.grdTitle = QLabel("CALCSTUDIO")
-        self.grdCont1Layout.addWidget(self.grdTitle)
+        self.grdCont1Head1Layout.addWidget(self.grdTitle)
         self.grdTitle.setStyleSheet("""
-            font-family: 'Arial';
+            font-family: 'Helvetica';
             font-size: 80px;
             color: #595959;
+            font-weight: bold;
         """)
         self.grdTitle.setAlignment(Qt.AlignLeft | Qt. AlignVCenter)
         self.grdTitle.setSizePolicy(QSizePolicy.Minimum, QSizePolicy.Fixed)
 
         self.grdSubTitle = QLabel("Multivariable: Gradient Descent")
-        self.grdCont1Layout.addWidget(self.grdSubTitle)
+        self.grdCont1Head1Layout.addWidget(self.grdSubTitle)
         self.grdSubTitle.setStyleSheet("""
-            font-family: 'Arial';
-            font-size: 50px;
+            font-family: 'Helvetica';
+            font-size: 30px;
             color: #595959;
         """)
         self.grdSubTitle.setSizePolicy(QSizePolicy.Minimum, QSizePolicy.Fixed)
 
-        self.grdFuncLabel = QLabel("Function Input: ")
-        self.grdCont1Layout.addWidget(self.grdFuncLabel)
-        self.grdFuncLabel.setStyleSheet("""
-            font-family: 'Arial';
-            font-size: 30px;
-            color: #595959;
-        """)
-        self.grdFuncLabel.setSizePolicy(QSizePolicy.Minimum, QSizePolicy.Fixed)
+        ### --- Content in Heading Container --- ### End
 
-        self.grdFuncCont = QWidget()
-        self.grdCont1Layout.addWidget(self.grdFuncCont)
-        self.grdFuncContLayout = QHBoxLayout(self.grdFuncCont)
-        self.grdFuncCont.setSizePolicy(QSizePolicy.Minimum, QSizePolicy.Fixed)
+        self.grdCont1Space2 = QWidget()
+        self.grdCont1HeadLayout.addWidget(self.grdCont1Space2, stretch=2)
+        self.grdSubTitle.setAlignment(Qt.AlignHCenter | Qt.AlignVCenter)
+        self.grdCont1Space2.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Preferred)
+
+        ## --- Heading Container --- ## End
+
+        self.grdSpace20 = QWidget()
+        self.grdCont1Layout.addWidget(self.grdSpace20, stretch=37)
+
+        ## --- Info Container --- ## Start
+        self.grdCont1Info = QWidget()
+        self.grdCont1Layout.addWidget(self.grdCont1Info, stretch=124)
+        self.grdInfoContLayout = QHBoxLayout(self.grdCont1Info)
+        self.grdInfoContLayout.setContentsMargins(0, 0, 0, 0)
+        self.grdInfoContLayout.setSpacing(0)
+
+        self.grdCont1Space3 = QWidget()
+        self.grdInfoContLayout.addWidget(self.grdCont1Space3, stretch=1)
+
+        ### --- Content in Info Container --- ### Start
+        self.grdCont1Info1 = QWidget()
+        self.grdInfoContLayout.addWidget(self.grdCont1Info1, stretch=14)
+        self.grdInfoContLayout1 = QVBoxLayout(self.grdCont1Info1)
+        self.grdInfoContLayout1.setContentsMargins(0, 0, 0, 0)
+        self.grdInfoContLayout1.setSpacing(20)
 
         self.grdFuncInput = QLineEdit()
-        self.grdFuncContLayout.addWidget(self.grdFuncInput, stretch=4)
+        self.grdInfoContLayout1.addWidget(self.grdFuncInput, stretch=4)
+        self.grdFuncInput.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Expanding)
+        self.grdFuncInput.setAlignment(Qt.AlignLeft)
+        self.grdFuncInput.setPlaceholderText("  Function Input: ")
         self.grdFuncInput.setStyleSheet("""
             QLineEdit {
                 background-color: #ffffff;
                 color: #000000;
-                border: 2px solid black;
+                border: 3px solid #A9A8A8;
+                border-radius: 10px;
+                padding-top: 4px;
+                font-size: 25px;
+                font-family: "Helvetica";
             }
                                          
             QLineEdit:focus {
-                border: 2px solid #88cc88;
+                border: 3px solid #FF6A6A;
                 background-color: #ffffff;
             }
-        """)
-        self.grdFuncInput.setSizePolicy(QSizePolicy.Minimum, QSizePolicy.Fixed)
-
-        self.grdSubmit = QPushButton("Submit")
-        self.grdSubmit.clicked.connect(self.timer)
-        self.grdFuncContLayout.addWidget(self.grdSubmit, stretch=1)
-        self.grdSubmit.setStyleSheet("""
-            QPushButton {
-                background-color: #999999;
-                padding: 16px, 16px;
-                font-size: 16px;
-            }
-                                   
-            QPushButton:pressed {
-                background-color: #88cc88;
+                                       
+            QLineEdit::placeholder{
+                font-family: "Helvetica";
             }
         """)
-
-        self.grdLearnLabel = QLabel("Learning Rate: ")
-        self.grdCont1Layout.addWidget(self.grdLearnLabel)
-        self.grdLearnLabel.setStyleSheet("""
-            font-family: 'Arial';
-            font-size: 30px;
-            color: #595959;
-        """)
-        self.grdLearnLabel.setSizePolicy(QSizePolicy.Minimum, QSizePolicy.Fixed)
+        self.grdFuncInput.setFixedHeight(50)
 
         self.grdLearnInput = QLineEdit()
-        self.grdCont1Layout.addWidget(self.grdLearnInput)
+        self.grdInfoContLayout1.addWidget(self.grdLearnInput)
+        self.grdLearnInput.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Expanding)
+        self.grdLearnInput.setAlignment(Qt.AlignLeft)
+        self.grdLearnInput.setPlaceholderText("  Learning Rate: ")
         self.grdLearnInput.setStyleSheet("""
             QLineEdit {
                 background-color: #ffffff;
                 color: #000000;
-                border: 2px solid black;
+                border: 3px solid #A9A8A8;
+                border-radius: 10px;
+                padding-top: 4px;
+                font-size: 25px;
+                font-family: "Helvetica";
             }
                                          
             QLineEdit:focus {
-                border: 2px solid #88cc88;
+                border: 3px solid #FF6A6A;
                 background-color: #ffffff;
             }
+                                       
+            QLineEdit::placeholder{
+                font-family: "Helvetica";
+            }
         """)
-        self.grdLearnInput.setSizePolicy(QSizePolicy.Minimum, QSizePolicy.Fixed)
+        self.grdLearnInput.setFixedHeight(50)
 
-        self.grdContourLabel = QLabel("Contour Plot ")
-        self.grdCont1Layout.addWidget(self.grdContourLabel)
+        self.grdContourLabel = QLabel("Values: ")
+        self.grdInfoContLayout1.addWidget(self.grdContourLabel)
         self.grdContourLabel.setStyleSheet("""
-            font-family: 'Arial';
+            font-family: 'Helvetica';
             font-size: 30px;
             color: #595959;
         """)
         self.grdContourLabel.setSizePolicy(QSizePolicy.Minimum, QSizePolicy.Fixed)
 
         self.grdFailLabel = QLabel("...")
-        self.grdCont1Layout.addWidget(self.grdFailLabel)
+        self.grdInfoContLayout1.addWidget(self.grdFailLabel)
         self.grdFailLabel.setStyleSheet("""
-            font-family: 'Arial';
+            font-family: 'Helvetica';
             font-size: 30px;
             color: #595959;
         """)
         self.grdFailLabel.setSizePolicy(QSizePolicy.Minimum, QSizePolicy.Fixed)
 
-        # --- Container Two ---
+        ### --- Content in Info Container --- ### End
+
+        self.grdCont1Space8 = QWidget()
+        self.grdInfoContLayout.addWidget(self.grdCont1Space8, stretch=1)
+
+        ## --- Info Container --- ## End
+
+        self.grdCont1Space9 = QWidget()
+        self.grdCont1Layout.addWidget(self.grdCont1Space9, stretch=147)
+
+        ## --- Button Container --- ## Start
+        self.grdCont1Button = QWidget()
+        self.grdCont1Layout.addWidget(self.grdCont1Button, stretch=46)
+        self.grdCont1ButtonLayout = QHBoxLayout(self.grdCont1Button)
+        self.grdCont1ButtonLayout.setContentsMargins(0, 0, 0, 0)
+        self.grdCont1ButtonLayout.setSpacing(0)
+
+        self.grdCont1Space10 = QWidget()
+        self.grdCont1ButtonLayout.addWidget(self.grdCont1Space10, stretch=1)
+
+        self.grdSubmit = QPushButton("MINIMIZE")
+        self.grdSubmit.clicked.connect(self.startTimer)
+        self.grdCont1ButtonLayout.addWidget(self.grdSubmit, stretch=6)
+        self.grdSubmit.setStyleSheet("""
+            QPushButton {
+                background-color: #FF6A6A;
+                padding: 22px, 16px;
+                font-size: 35px;
+                border-radius: 10px;
+                font-weight: bold;
+                font-family: "Helvetica";
+            }
+                                   
+            QPushButton:pressed {
+                background-color: #FF6A6A;
+            }
+        """)
+
+        self.grdCont1Space11 = QWidget()
+        self.grdCont1ButtonLayout.addWidget(self.grdCont1Space11, stretch=1)
+
+        ## --- Button Container --- ## End
+
+        self.grdSpace = QWidget()
+        self.grdCont1Layout.addWidget(self.grdSpace, stretch=108)
+
+        # --- Container One --- # End
+
+        # --- Container Two --- # Start
         self.grdCont2 = QWidget()
         self.grdCont2Layout = QVBoxLayout(self.grdCont2)
-        self.grdLayout.addWidget(self.grdCont2, stretch=6)
+        self.grdLayout.addWidget(self.grdCont2, stretch=45)
         # self.grdCont2.setStyleSheet("""
         # border: 2px solid black;
         # border-radius: 5px;
         # """)
 
-        self.fig = Figure()
+        self.fig = Figure(figsize=(6, 7))
         self.grdCanvas = FigureCanvas(self.fig)
+        self.grdCanvas.setSizePolicy(QSizePolicy.Fixed, QSizePolicy.Fixed)
         self.grdCont2Layout.addWidget(self.grdCanvas)
         self.axGrd = self.fig.add_subplot(111, projection = '3d')
 
         self.timer = QTimer()
         self.timer.timeout.connect(self.gradientDescent)
+
+        # --- Container Two --- # End
 
     def parseInputs(self):
         self.x, self.y = symbols("x y")
@@ -179,7 +269,7 @@ class GradientDescentTab(QWidget):
 
         if abs(self.step_x) <= .001 or abs(self.step_y) <= .001:
             self.timer.stop()
-            self.grdContourLabel.setText(f"Converged at step {self.n}")
+            self.grdContourLabel.setText(f"Converged at Step {self.n}")
             return
         else:
             try:
@@ -212,15 +302,15 @@ class GradientDescentTab(QWidget):
             np_func = lambdify((self.x, self.y), self.grdFunc)
             Z = np_func(X, Y)
 
-            self.axGrd.plot_surface(X, Y, Z, alpha=.5)
-            self.axGrd.scatter(self.x0, self.y0, z, color='red', s=50)
+            self.axGrd.plot_surface(X, Y, Z, alpha=.5, color='#FF6A6A')
+            self.axGrd.scatter(self.x0, self.y0, z, color='black', s=50)
             self.grdCanvas.draw()
         except Exception as e:
             self.grdFailLabel.setText(f"Error Plotting Function.")
 
         return
     
-    def timer(self):
+    def startTimer(self):
         self.parseInputs()
         if not self.timer.isActive():
             self.timer.start(500)

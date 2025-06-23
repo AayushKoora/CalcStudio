@@ -1,5 +1,6 @@
 from PyQt5.QtWidgets import QWidget, QHBoxLayout, QVBoxLayout, QLineEdit, QSlider, QLabel, QSizePolicy, QPushButton, QMessageBox
 from PyQt5.QtCore import Qt
+from PyQt5.QtGui import QFont, QColor
 from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg as FigureCanvas
 import matplotlib.pyplot as plt
 import numpy as np
@@ -15,88 +16,120 @@ class DerivativeTab(QWidget):
 
     def init_ui(self):
 
-        # === Derivative Tab ===
+        # === Derivative Tab === # Start
         self.derivLayout = QHBoxLayout(self)
         self.setLayout(self.derivLayout)
+        self.derivLayout.setContentsMargins(0, 0, 0, 0)
+        self.derivLayout.setSpacing(0)
 
-        # --- Container One ---
+        # --- Container One --- # Start
         self.derivCont1 = QWidget()
         self.derivCont1Layout = QVBoxLayout(self.derivCont1)
+        self.derivLayout.addWidget(self.derivCont1, stretch=55)
         self.derivCont1Layout.setContentsMargins(0, 0, 0, 0)
         self.derivCont1Layout.setSpacing(0)
-        self.derivLayout.addWidget(self.derivCont1, stretch=4)
         # self.derivCont1.setStyleSheet("""
         #     border: 2px solid black;
         #     border-radius: 5px;        
         # """)
 
+        self.derivCont1Space0 = QWidget()
+        self.derivCont1Layout.addWidget(self.derivCont1Space0, stretch=41)
+
+        ## --- Heading Container --- ## Start
+        self.derivCont1Head = QWidget()
+        self.derivCont1HeadLayout = QHBoxLayout(self.derivCont1Head)
+        self.derivCont1Layout.addWidget(self.derivCont1Head, stretch=89)
+        self.derivCont1HeadLayout.setContentsMargins(0, 0, 0, 0)
+        self.derivCont1HeadLayout.setSpacing(0)
+
+        self.derivCont1Space1 = QWidget()
+        self.derivCont1HeadLayout.addWidget(self.derivCont1Space1, stretch=2)
+        self.derivCont1Space1.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Preferred)
+
+        ### --- Content in Heading Container --- ### Start
+        self.derivCont1Head1 = QWidget()
+        self.derivCont1Head1Layout = QVBoxLayout(self.derivCont1Head1)
+        self.derivCont1HeadLayout.addWidget(self.derivCont1Head1, stretch=2)
+        self.derivCont1Head1Layout.setContentsMargins(0, 0, 0, 0)
+        self.derivCont1Head1Layout.setSpacing(0)        
+
         self.derivTitle = QLabel("CALCSTUDIO")
-        self.derivCont1Layout.addWidget(self.derivTitle)
+        self.derivCont1Head1Layout.addWidget(self.derivTitle)
         self.derivTitle.setStyleSheet("""
-            font-family: 'Arial';
+            font-family: 'Helvetica';
             font-size: 80px;
             color: #595959;
+            font-weight: bold;
         """)
         self.derivTitle.setAlignment(Qt.AlignLeft | Qt. AlignVCenter)
         self.derivTitle.setSizePolicy(QSizePolicy.Minimum, QSizePolicy.Fixed)
 
         self.derivSubTitle = QLabel("Derivatives: Tangent Line")
-        self.derivCont1Layout.addWidget(self.derivSubTitle,)
+        self.derivCont1Head1Layout.addWidget(self.derivSubTitle,)
         self.derivSubTitle.setStyleSheet("""
-            font-family: 'Arial';
-            font-size: 50px;
-            color: #595959;
-        """)
-        self.derivSubTitle.setSizePolicy(QSizePolicy.Minimum, QSizePolicy.Fixed)
-
-        self.derivFunc = QLabel("Function Input")
-        self.derivCont1Layout.addWidget(self.derivFunc)
-        self.derivFunc.setStyleSheet("""
-            font-family: 'Arial';
+            font-family: 'Helvetica';
             font-size: 30px;
             color: #595959;
         """)
-        self.derivFunc.setSizePolicy(QSizePolicy.Minimum, QSizePolicy.Fixed)
+        self.derivSubTitle.setSizePolicy(QSizePolicy.Minimum, QSizePolicy.Fixed)
+        ### --- Content in Heading Container --- ### End
 
-        self.derivValueCont = QWidget()
-        self.derivValueContLayout = QHBoxLayout(self.derivValueCont)
-        self.derivCont1Layout.addWidget(self.derivValueCont)
+        self.derivCont1Space2 = QWidget()
+        self.derivCont1HeadLayout.addWidget(self.derivCont1Space2, stretch=2)
+        self.derivSubTitle.setAlignment(Qt.AlignHCenter | Qt.AlignVCenter)
+        self.derivCont1Space2.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Preferred)
+        ## --- Heading Container --- ## End
+
+        self.derivSpace20 = QWidget()
+        self.derivCont1Layout.addWidget(self.derivSpace20, stretch=41)
+
+        ## --- Info Container -- ## Start
+        self.derivCont1Info = QWidget()
+        self.derivCont1Layout.addWidget(self.derivCont1Info, stretch=192)
+        self.derivInfoContLayout = QHBoxLayout(self.derivCont1Info)
+        self.derivInfoContLayout.setContentsMargins(0, 0, 0, 0)
+        self.derivInfoContLayout.setSpacing(0)
+
+        self.derivCont1Space3 = QWidget()
+        self.derivInfoContLayout.addWidget(self.derivCont1Space3, stretch=1)
+
+        ### --- Content in Info Container --- ### Start
+        self.derivCont1Info1 = QWidget()
+        self.derivInfoContLayout.addWidget(self.derivCont1Info1, stretch=14)
+        self.derivInfoContLayout1 = QVBoxLayout(self.derivCont1Info1)
+        self.derivInfoContLayout1.setContentsMargins(0, 0, 0, 0)
+        self.derivInfoContLayout1.setSpacing(20)
 
         self.input = QLineEdit()
-        self.derivValueContLayout.addWidget(self.input, stretch=4)
+        self.input.setPlaceholderText("  Function Input: ")
+        self.derivInfoContLayout1.addWidget(self.input, stretch=4)
         self.input.setStyleSheet("""
             QLineEdit {
                 background-color: #ffffff;
                 color: #000000;
-                border: 2px solid black;
+                border: 3px solid #A9A8A8;
+                border-radius: 10px;
+                padding-top: 4px;
+                font-size: 25px;
+                font-family: "Helvetica";
             }
                                          
             QLineEdit:focus {
-                border: 2px solid #88cc88;
+                border: 3px solid #FF6A6A;
                 background-color: #ffffff;
             }
-        """)
-        self.input.setSizePolicy(QSizePolicy.Minimum, QSizePolicy.Fixed)
-
-        self.derivSubmit = QPushButton("Submit Function")
-        self.derivSubmit.clicked.connect(self.setfunction)
-        self.derivValueContLayout.addWidget(self.derivSubmit, stretch=1)
-        self.derivSubmit.setStyleSheet("""
-            QPushButton {
-                background-color: #999999;
-                padding: 16px, 16px;
-                font-size: 16px;
-            }
-                                   
-            QPushButton:pressed {
-                background-color: #88cc88;
+                                       
+            QLineEdit::placeholder{
+                font-family: "Helvetica";
             }
         """)
+        self.input.setFixedHeight(50)
 
-        self.derivXValue = QLabel("X Value:")
-        self.derivCont1Layout.addWidget(self.derivXValue)
+        self.derivXValue = QLabel("Input X Value:")
+        self.derivInfoContLayout1.addWidget(self.derivXValue)
         self.derivXValue.setStyleSheet("""
-            font-family: 'Arial';
+            font-family: 'Helvetica';
             font-size: 30px;
             color: #595959;
         """)
@@ -107,7 +140,7 @@ class DerivativeTab(QWidget):
         self.slider.setMaximum(100)
         self.slider.setValue(1)
         self.slider.valueChanged.connect(self.derivative)
-        self.derivCont1Layout.addWidget(self.slider)
+        self.derivInfoContLayout1.addWidget(self.slider)
         self.slider.setStyleSheet("""
         QSlider::groove:horizontal {
             border: 1px solid #999999;
@@ -117,7 +150,7 @@ class DerivativeTab(QWidget):
         }
 
         QSlider::handle:horizontal {
-            background: #88cc88;
+            background: #FF6A6A;
             border: 1px solid #5c5c5c;
             width: 16px;
             height: 16px;
@@ -126,7 +159,7 @@ class DerivativeTab(QWidget):
         }
 
         QSlider::sub-page:horizontal {
-            background: #88cc88;
+            background: #FF6A6A;
             border-radius: 4px;
         }
 
@@ -135,32 +168,90 @@ class DerivativeTab(QWidget):
             border-radius: 4px;
         }
     """)
-        
-        self.label = QLabel("Value: 1")
-        self.derivCont1Layout.addWidget(self.label)
-        self.label.setStyleSheet("""
-            font-family: 'Arial';
+
+        self.derLabel = QLabel("Derivative:")
+        self.derivInfoContLayout1.addWidget(self.derLabel)
+        self.derLabel.setStyleSheet("""
+            font-family: 'Helvetica';
             font-size: 30px;
             color: #595959;
         """)
-        self.label.setSizePolicy(QSizePolicy.Minimum, QSizePolicy.Fixed)
+        self.derivXValue.setSizePolicy(QSizePolicy.Minimum, QSizePolicy.Fixed)
+
+        self.derivTangLine = QLabel("Tangent Line:")
+        self.derivInfoContLayout1.addWidget(self.derivTangLine)
+        self.derivTangLine.setStyleSheet("""
+            font-family: 'Helvetica';
+            font-size: 30px;
+            color: #595959;
+        """)
+        self.derivTangLine.setSizePolicy(QSizePolicy.Minimum, QSizePolicy.Fixed)
+
+        ### --- Content in Info Container --- ### End
 
         self.derivSpace = QWidget()
-        self.derivCont1Layout.addWidget(self.derivSpace, stretch=1)
+        self.derivInfoContLayout.addWidget(self.derivSpace, stretch=1)
 
-        # --- Container Two ---
+        ## --- Info Container --- ## End
+
+        self.derivSpace19 = QWidget()
+        self.derivCont1Layout.addWidget(self.derivSpace19, stretch=43)
+
+        ## --- Button Container --- ## Start
+        self.derivCont1Button = QWidget()
+        self.derivCont1Layout.addWidget(self.derivCont1Button, stretch=46)
+        self.derivCont1ButtonLayout = QHBoxLayout(self.derivCont1Button)
+        self.derivCont1ButtonLayout.setContentsMargins(0, 0, 0, 0)
+        self.derivCont1ButtonLayout.setSpacing(0)
+
+        self.derivCont1Space10 = QWidget()
+        self.derivCont1ButtonLayout.addWidget(self.derivCont1Space10, stretch=1)
+        
+        self.derivSubmit = QPushButton("DIFFERENTIATE")
+        self.derivSubmit.clicked.connect(self.setfunction)
+        self.derivCont1ButtonLayout.addWidget(self.derivSubmit, stretch=6)
+        self.derivSubmit.setStyleSheet("""
+            QPushButton {
+                background-color: #FF6A6A;
+                padding: 22px, 16px;
+                font-size: 35px;
+                border-radius: 10px;
+                font-weight: bold;
+                font-family: "Helvetica";
+            }
+                                   
+            QPushButton:pressed {
+                background-color: #FF6A6A;
+            }
+        """)
+
+        self.derivCont1Space11 = QWidget()
+        self.derivCont1ButtonLayout.addWidget(self.derivCont1Space11, stretch=1)
+
+        ## --- Button Container --- ## End
+
+        self.derivSpace29 = QWidget()
+        self.derivCont1Layout.addWidget(self.derivSpace29, stretch=146)
+
+        # --- Container One --- # End
+
+        # --- Container Two --- # Start
         self.derivCont2 = QWidget()
         self.derivCont2Layout = QVBoxLayout(self.derivCont2)
-        self.derivLayout.addWidget(self.derivCont2, stretch=6)
-
-        self.canvas = FigureCanvas(plt.Figure(figsize=(10, 10)))
-        self.derivCont2Layout.addWidget(self.canvas)
-        self.insert_ax()
-
+        self.derivCont2Layout.setContentsMargins(10, 10, 10, 10)
+        self.derivCont2Layout.setSpacing(0)
+        self.derivLayout.addWidget(self.derivCont2, stretch=45)
         # self.derivCont2.setStyleSheet("""
         # border: 2px solid black;
         # border-radius: 5px;        
         # """)
+
+        self.canvas = FigureCanvas(plt.Figure(figsize=(6, 7)))
+        self.canvas.setSizePolicy(QSizePolicy.Fixed, QSizePolicy.Fixed)
+        self.derivCont2Layout.addWidget(self.canvas)
+        self.insert_ax()
+
+        # --- Container Two --- # End
         
     def setfunction(self):
         self.func_str = self.input.text().strip()
@@ -183,11 +274,12 @@ class DerivativeTab(QWidget):
             y_val = func.subs(x, value)
         except Exception as e:
             print(f"Input Error: {e}")
-            self.label.setText("Invalid input; Error Calculating Derivative.")
+            self.derivXValue.setText("Invalid input; Error Calculating Derivative.")
             return
 
         tangent_line = slope * x - slope * value + y_val
-        self.label.setText(f"Derivative at x = {value}: {slope}")
+        self.derLabel.setText(f"Derivative at x = {value}: {slope}")
+        self.derivTangLine.setText(f"Tangent Line: {tangent_line}")
 
         # Step 2: x Range Calculation
         try:
@@ -200,7 +292,7 @@ class DerivativeTab(QWidget):
             tangent_np = lambdify(x, tangent_line, 'numpy')
         except Exception as e:
             print(f"x Range Calculation Error: {e}")
-            self.label.setText("x Range Calculation Error.")
+            self.derivXValue.setText("x Range Calculation Error.")
             return
 
         # Step 3: y Range Calculation
@@ -228,7 +320,7 @@ class DerivativeTab(QWidget):
 
         except Exception as e:
             print(f"y Range Calculation Error: {e}")
-            self.label.setText("y Range Calculation Error.")
+            self.derivXValue.setText("y Range Calculation Error.")
             return
 
         # Step 4: Plotting
@@ -237,8 +329,8 @@ class DerivativeTab(QWidget):
             self.ax.set_xlim([x_min, x_max])
             self.ax.set_ylim([y_min - y_margin, y_max + y_margin])
 
-            self.ax.plot(x_points, y_tangent_np, label="Tangent Line")
-            self.ax.plot(x_points, y_func_np, label="Function")
+            self.ax.plot(x_points, y_tangent_np, label="Tangent Line", color='black')
+            self.ax.plot(x_points, y_func_np, label="Function", color='red')
             self.ax.axhline(0, color='black', linestyle=':')
             self.ax.axvline(0, color='black', linestyle=':')
 
@@ -246,7 +338,7 @@ class DerivativeTab(QWidget):
             self.canvas.draw()
         except Exception as e:
             print(f" Plotting Error: {e}")
-            self.label.setText("Error Plotting Function")
+            self.derivXValue.setText("Error Plotting Function")
             return
 
     def insert_ax(self):
