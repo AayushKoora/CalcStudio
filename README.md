@@ -5,6 +5,10 @@
 CalcStudio
 Interactive calculus visualizer for students and educators
 
+Download CalcStudio:
+- For macOS: https://github.com/AayushKoora/CalcStudio/releases/download/v.1.0/CalcStudio-mac.zip
+- For windows: https://github.com/AayushKoora/CalcStudio/releases/download/v.1.0/CalcStudio.exe
+
 **CalcStudio** is an interactive calculus learning tool with visualizations of derivatives, integrals, and other calculus concepts (soon to have AI/ML and multivariable concepts). Built from scratch with Python, PyQt5, Matplotlib, and Numpy to support conceptual understanding through dynamic graphs and intuitive PyQt5 UI. Used for tutoring and self-study across AP and early college curriculum.
 
 Built for individuals who are learning advanced math concepts, CalcStudio breaks down these topics using visuals and interactive sliders and buttons that the user can control.
