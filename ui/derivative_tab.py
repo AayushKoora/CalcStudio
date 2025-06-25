@@ -4,7 +4,8 @@ from PyQt5.QtGui import QFont, QColor
 from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg as FigureCanvas
 import matplotlib.pyplot as plt
 import numpy as np
-from sympy import symbols, sympify, diff, lambdify
+from sympy import symbols, sympify, diff, lambdify, zoo
+from sympy import (sin, cos, tan, exp, log, sqrt, Pow, Add, Mul, Function)
 from style.colors import Colors
 
 class DerivativeTab(QWidget):
@@ -252,38 +253,121 @@ class DerivativeTab(QWidget):
         self.insert_ax()
 
         # --- Container Two --- # End
-        
+
+    def classifyFunction(self, function):
+        x = symbols("x")
+        self.funcType = "other"
+        numer, denom = function.as_numer_denom()
+
+        if function.is_constant():
+            self.funcType = "constant"
+            return
+
+        if function.has(log):
+            self.funcType = "logarithmic"
+            return
+
+        if function.has(sin, cos):
+            self.funcType = "trigonometric"
+            return
+
+        for p in function.atoms(Pow):
+            base, exponent = p.args
+            if exponent.has(x) and base.is_number:
+                self.funcType = "exponential"
+                return
+        if function.has(exp):
+            self.funcType = "exponential"
+            return
+
+        if denom == 1 and function.is_polynomial():
+            self.funcType = "polynomial"
+            return
+
+        if function.is_rational_function():
+            self.funcType = "rational"
+            return
+
+        for p in function.atoms(Pow):
+            if p.exp.is_Rational and p.exp < 1:
+                self.funcType = "root"
+                return
+
+        self.funcType = "other"
+    
     def setfunction(self):
         self.func_str = self.input.text().strip()
         if not self.func_str:
             self.func_str = "x"
         print(f"Stored input: {self.func_str}")
 
+        x = symbols("x")
+        try:
+            func = sympify(self.func_str)
+        except Exception:
+            func = x
+
+        self.classifyFunction(func)
+        self.slider.setValue(0)
+
+        if self.funcType == "trigonometric":
+            self.slider.setMinimum(-6)
+            self.slider.setMaximum(6)
+        else:
+            self.slider.setMinimum(-100)
+            self.slider.setMaximum(100)
+
     # Function that differentiates input function and plots it on the graph
     def derivative(self, value):
         if not hasattr(self, 'func_str'):
             return
-
+        value = float(value)
         x = symbols("x")
+
+        self.derivXValue.setText("Input X Value:")
 
         # Step 1: Parse Inputs; Differentiation
         try:
             func = sympify(self.func_str)
             deriv = diff(func, x)
-            slope = deriv.subs(x, value)
-            y_val = func.subs(x, value)
+            slope = deriv.subs(x, value).evalf()
+            y_val = func.subs(x, value).evalf()
+            if slope == zoo or y_val == zoo or slope.is_infinite or y_val.is_infinite:
+                self.derivXValue.setText("Error: Value at x is infinite or undefined.")
+                self.derLabel.setText("Derivative at x = ? : undefined")
+                self.derivTangLine.setText("Tangent Line: undefined")
+                self.ax.clear()
+                self.canvas.draw()
+                return
+
+            if not slope.is_real or not y_val.is_real:
+                self.derivXValue.setText("Error: Value at x is complex (non-real).")
+                self.derLabel.setText("Derivative at x = ? : complex")
+                self.derivTangLine.setText("Tangent Line: complex")
+                self.ax.clear()
+                self.canvas.draw()
+                return
+            
         except Exception as e:
             print(f"Input Error: {e}")
             self.derivXValue.setText("Invalid input; Error Calculating Derivative.")
             return
+    
+        funcType = self.funcType
+        print(funcType)
 
         tangent_line = slope * x - slope * value + y_val
+        y_intercept = y_val - slope * value
         self.derLabel.setText(f"Derivative at x = {value}: {slope:.4f}")
-        self.derivTangLine.setText(f"Tangent Line: {tangent_line}")
+        self.derivTangLine.setText(f"Tangent Line: {slope:.4f}x - {y_intercept:.4f} ")
 
         # Step 2: x Range Calculation
         try:
-            range_width = 100
+            
+            if funcType == "trigonometric":
+                range_width = 7
+            else:
+                range_width = 100
             x_min = value - range_width
             x_max = value + range_width
             x_points = np.linspace(x_min, x_max, 400)

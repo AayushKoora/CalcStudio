@@ -281,6 +281,14 @@ class IntegralTab(QWidget):
         # Step 2: Integration
         try:
             intValue = integrate(intfunc, (x, intfirst, intsecond))
+
+            from sympy import zoo, nan
+            if intValue.has(zoo) or intValue.has(nan) or intValue.is_infinite:
+                self.intLabel.setText("Integral result is undefined or infinite.")
+                return
+            if not intValue.is_real:
+                self.intLabel.setText("Integral result is complex (non-real).")
+                return
         except Exception as e:
             print(f"Integration Error: {e}")
             self.intLabel.setText("Error Calculating Integral.")
@@ -306,10 +314,21 @@ class IntegralTab(QWidget):
         # Step 4: Numeric Evaluation and y Range Calculation
         try:
             intfunc_np = lambdify(x, intfunc, 'numpy')
+
             y_intfunc_np = intfunc_np(x_points)
+            if not isinstance(y_intfunc_np, np.ndarray):
+                y_intfunc_np = np.full_like(x_points, y_intfunc_np)
 
             x_fill = np.linspace(intfirst, intsecond, 200)
             y_fill = intfunc_np(x_fill)
+            if not isinstance(y_fill, np.ndarray):
+                y_fill = np.full_like(x_fill, y_fill)
+
+            if not np.all(np.isfinite(y_fill)):
+                self.intLabel.setText("Function has undefined/infinite values in integration range.")
+                self.axInt.clear()
+                self.intCanvas.draw()
+                return
 
             finite_y = y_fill[np.isfinite(y_fill)]
 
@@ -335,7 +354,7 @@ class IntegralTab(QWidget):
         # Step 5: Plotting
         try:
             self.axInt.set_xlim([x_min, x_max])
-            self.axInt.set_ylim([y_min - y_margin, y_max + y_margin])
+            self.axInt.set_ylim([y_min, y_max])
             self.axInt.plot(x_points, y_intfunc_np, label="Function", color='black')
             self.axInt.axhline(0, color='black', linestyle=':')
             self.axInt.axvline(0, color='black', linestyle=':')

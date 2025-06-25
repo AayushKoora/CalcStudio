@@ -299,16 +299,33 @@ class GradientDescentTab(QWidget):
         X, Y = np.meshgrid(x_val, y_val)
 
         try:
-            np_func = lambdify((self.x, self.y), self.grdFunc)
+            np_func = lambdify((self.x, self.y), self.grdFunc, 'numpy')
             Z = np_func(X, Y)
 
-            self.axGrd.plot_surface(X, Y, Z, alpha=.5, color='#FF6A6A')
+            if not isinstance(Z, np.ndarray):
+                Z = np.full_like(X, Z)
+
+            if not np.all(np.isfinite(Z)):
+                self.grdFailLabel.setText("Function undefined/infinite in plotting region.")
+                self.timer.stop()
+                self.axGrd.clear()
+                self.grdCanvas.draw()
+                return
+
+            self.axGrd.plot_surface(X, Y, Z, alpha=0.5, color='#FF6A6A')
+
+            if not np.isfinite(z):
+                self.grdFailLabel.setText("Z value is not finite.")
+                self.timer.stop()
+                self.axGrd.clear()
+                self.grdCanvas.draw()
+                return
+
             self.axGrd.scatter(self.x0, self.y0, z, color='black', s=50)
             self.grdCanvas.draw()
         except Exception as e:
             self.grdFailLabel.setText(f"Error Plotting Function.")
-
-        return
+            return
     
     def startTimer(self):
         self.parseInputs()

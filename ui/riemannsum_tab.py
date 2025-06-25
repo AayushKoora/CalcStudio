@@ -363,10 +363,24 @@ class RiemannSumTab(QWidget):
         # Step 3: y Range Calculation
         try:
             func_np = lambdify(x, func, 'numpy')
-            y_func_np = func_np(x_points)
 
+            # Evaluate across full graph range
+            y_func_np = func_np(x_points)
+            if not isinstance(y_func_np, np.ndarray):
+                y_func_np = np.full_like(x_points, y_func_np)
+
+            # Evaluate in rectangle region
             x_values = np.linspace(firstVal, lastVal, 200)
             y_values = func_np(x_values)
+            if not isinstance(y_values, np.ndarray):
+                y_values = np.full_like(x_values, y_values)
+
+            if not np.all(np.isfinite(y_values)):
+                self.remApproxAreaLabel.setText("Function has undefined/infinite values in range.")
+                self.remPercErrorLabel.setText("Null")
+                self.axRem.clear()
+                self.remCanvas.draw()
+                return
 
             finite_y = y_values[np.isfinite(y_values)]
 
