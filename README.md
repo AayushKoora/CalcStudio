@@ -12,7 +12,7 @@
 ## Download - Please Star this Repository to Show Support!!
 
 - For macOS: [CalcStudio-mac.zip](https://github.com/AayushKoora/CalcStudio/releases/download/v.1.0/CalcStudio-mac.zip)
-- For Windows: [CalcStudio.exe](https://github.com/AayushKoora/CalcStudio/releases/download/v.1.0/CalcStudio.exe)
+- For Windows: [CalcStudio.exe](https://github.com/AayushKoora/CalcStudio/releases/download/v.1.0/CalcStudio.2.exe)
 
 ---
 
