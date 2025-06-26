@@ -40,20 +40,23 @@ Step 1: Install the Application
 > You can also download from: [GitHub Releases](https://github.com/aayushkoora/calcstudio/releases)
 
 Step 2: Inputting a Function
-> CalcStudio supports these main groups of functions; here is how you input them: 
-Polynomials: x**2, 3*x**3 + 5
-Exponentials: exp(x), 2**x
-Logarithmic: log(x), log(x, 5)
-Trigonometric (Sin and Cosine): sin(x), cos(x)
-Roots: sqrt(x), x**(3/2)
-Rational: 1/x, x/(x+1)
-Constants: 5, pi
-> More function inputs will be supported soon
+  CalcStudio supports these main groups of functions; here is how you input them: 
+  Polynomials: x**2, 3*x**3 + 5
+  Exponentials: exp(x), 2**x
+  Logarithmic: log(x), log(x, 5)
+  Trigonometric (Sin and Cosine): sin(x), cos(x)
+  Roots: sqrt(x), x**(3/2)
+  Rational: 1/x, x/(x+1)
+  Constants: 5, pi
+  **More function inputs will be supported soon**
 
 Step 3: Using the Modules
 > Derivatives: Tangent Line at Point - Input a function into the text box and press differentiate. Now when you move the x value slider you can see the tangent line move as your slider value changes. This module shows an output of the value of the derivative at that poin and the tangent line equation.
+
 > Integrals: Area Under a Curve - Input a function, first value, and last value and press integrate. After pressing the button you should see the graph show a curve and the area under the curves with bounds of the first and last value inputted. This module outputs the area under the curve.
+
 > Integrals: Riemann Sum Approximation - Input a function, number of rectangles used to approximate, type of approximation(left or right), and first and last value. After pressing approximate this module should output the function with the numbers of rectangles approximating the area under the function. It outputs the approximated area with rectangles and the percent error from the actual value under the curve.
+
 > Multivariable: Gradient Descent - Input a function (this input requires two inputs, x and a y, for example: x**2 + y**2) and a learning rate. Once minimized is pressed the module will display the function and show the step by step minimization of the function.
 
 ## Who is this Application For:
@@ -68,6 +71,12 @@ Step 3: Using the Modules
 - GCM High School in person summer workshop for 15 AP Calculus students
 
 ---
+
+## Screenshots:
+![ ](images/images1.png)
+![ ](images/images2.png)
+![ ](images/images3.png)
+![ ](images/images4.png)
 
 ## Tech Stack:
 - Python 3
