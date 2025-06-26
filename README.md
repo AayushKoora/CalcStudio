@@ -11,6 +11,7 @@
 
 ## Download - Please Star this Repository to Show Support!!
 
+- It is recommended to download CalcStudio locally using Github Clone!
 - For macOS: [CalcStudio-mac.zip](https://github.com/AayushKoora/CalcStudio/releases/download/v.1.0/CalcStudio-mac.zip)
 
 ---
