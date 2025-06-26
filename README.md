@@ -73,10 +73,10 @@ Step 3: Using the Modules
 ---
 
 ## Screenshots:
-![ ](images/images1.png)
-![ ](images/images2.png)
-![ ](images/images3.png)
-![ ](images/images4.png)
+![ ](images/image1.png)
+![ ](images/image2.png)
+![ ](images/image3.png)
+![ ](images/image4.png)
 
 ## Tech Stack:
 - Python 3
