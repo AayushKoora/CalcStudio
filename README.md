@@ -37,3 +37,13 @@ Author:
 Developed by [Aayush Koora](https://github.com/AayushKoora)
 
 To show support for this project, please star the repository
+
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-ZQ8CKG9X2K"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-ZQ8CKG9X2K');
+</script>
